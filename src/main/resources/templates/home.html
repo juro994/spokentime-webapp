@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+</head>
+<body>
+	<div id="top">
+		<h1 id="clock">12:30</h1>
+		<h2 id="textExpression">It's half past noon</h2>
+	</div>
+	<div id="bottom">
+		<h2>Test your own time here</h2>
+		<input id="ownTimeInput" placeholder="HH:MM"/>
+		<h2 id="ownTextExpression">It's half past noon</h2>
+	</div>
+	<script type="text/javascript" th:src="@{/js/actions.js}"></script>
+</body>
+</html>
