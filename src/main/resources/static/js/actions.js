@@ -1,33 +1,42 @@
-const clockElement = document.getElementById('clock');
-const input = document.getElementById('ownTimeInput');
-const ownTextExpressionElement = document.getElementById('ownTextExpression');
-const textExpressionElement = document.getElementById('textExpression');
+const init = () => {
+	const clockElement = document.getElementById('clock');
+	const inputElement = document.getElementById('ownTimeInput');
+	const ownTextExpressionElement = document.getElementById('ownTextExpression');
+	const textExpressionElement = document.getElementById('textExpression');
 
-let timeNow = () => {
-	return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-}
-
-let updateTimeNowClockElement = (now) => {
-	clockElement.innerHTML = now;
-}
-
-let updateElementWithNewSpokenTime = (time, element) => {
-	fetch("/api?time=" + time).then((response) => response.json()).then((data) => {
-		element.innerHTML = data.text;
-	});
-}
-
-
-setInterval(() => {
-	let now = timeNow();
-	updateElementWithNewSpokenTime(now, textExpressionElement);
-	updateTimeNowClockElement(now);
-}, 5000);
-
-input.addEventListener("keyup", (event) => {
-	  // Number 13 is the "Enter" key on the keyboard
-	if (event.keyCode === 13) {
-		let inputText = input.value;
-		updateElementWithNewSpokenTime(inputText, ownTextExpressionElement);
+	const timeNow = () => {
+		return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 	}
-});
+
+	const updateElementWithNewSpokenTime = (time, element) => {
+		fetch("/api?time=" + time).then((response) => {
+			return response.json();
+		}).then((data) => {
+			if(data.status && data.status === 'BAD_REQUEST') {
+				element.innerHTML = data.message;
+			} else {
+				element.innerHTML = 'It\'s ' + data.text;
+			}
+		});
+	}
+	
+	const updateClock = () => {
+		let now = timeNow();
+		updateElementWithNewSpokenTime(now, textExpressionElement);
+		clockElement.innerHTML = now;
+	}
+
+	updateClock();
+	setInterval(() => {
+		updateClock();
+	}, 5000);
+
+	inputElement.addEventListener("keyup", (event) => {
+		if (event.keyCode === 13 /* enter key code */) {
+			const inputText = inputElement.value;
+			updateElementWithNewSpokenTime(inputText, ownTextExpressionElement);
+		}
+	});
+};
+
+init();
