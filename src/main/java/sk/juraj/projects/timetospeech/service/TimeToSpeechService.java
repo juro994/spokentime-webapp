@@ -16,9 +16,10 @@ public class TimeToSpeechService {
 		var converter = SpokenTimeConverterFactory.getInstance(Locale.UK);
 		var formatter = DateTimeFormatter.ofPattern("H:m");
 		var time = LocalTime.parse(timeString, formatter);
-		var timeConverter = converter.convert(time);
-		var spokenTimeExpression = new SpokenTimeExpression(timeConverter);
-		return spokenTimeExpression;
+		
+		var timeConverted = converter.convert(time);
+		
+		return new SpokenTimeExpression(timeConverted);
 	}
 
 }
